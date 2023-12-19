@@ -1,0 +1,66 @@
+apiVersion: pausing.scylladb.com/v1alpha1
+kind: ScyllaDBDatacenterPool
+metadata:
+  name: basic
+spec:
+  capacity: 2
+  limit: 3
+  template:
+    spec:
+      metadata:
+        annotations:
+          internal.scylla-operator.scylladb.com/set-sysctls: '["fs.aio-max-nr": 30000000]'
+      clusterName: basic
+      datacenterName: us-east-1
+      scyllaDB:
+        enableDeveloperMode: true
+        image: docker.io/scylladb/scylla:6.2.3
+      scyllaDBManagerAgent:
+        image: docker.io/scylladb/scylla-manager-agent:3.4.0@sha256:441403aed8880cad1feef68aa7a8ee9ffd99a458dc1dcff3dc54ce5bf3cb07b7
+      exposeOptions:
+        nodeService:
+          type: Headless
+        broadcastOptions:
+          nodes:
+            type: PodIP
+          clients:
+            type: PodIP
+      certificateOptions:
+        clientCA:
+          type: UserManaged
+          userManagedOptions:
+            secretName: ""
+        servingCA:
+          type: UserManaged
+          userManagedOptions:
+            secretName: ""
+      rackTemplate:
+        nodes: 3
+        scyllaDB:
+          resources:
+            requests:
+              cpu: 10m
+              memory: 100Mi
+            limits:
+              cpu: 1
+              memory: 1Gi
+          storage:
+            capacity: 1Gi
+            storageClassName: scylladb-local-xfs-immediate
+        scyllaDBManagerAgent:
+          resources:
+            requests:
+              cpu: 10m
+              memory: 100Mi
+        placement:
+          tolerations:
+          - effect: NoSchedule
+            key: scylla-operator.scylladb.com/dedicated
+            operator: Equal
+            value: scyllaclusters
+      racks:
+      - name: us-east-1a
+      minReadySeconds: 1
+
+
+

@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pausable-scylladb-operator
+  namespace: pausable-scylladb-operator
+  labels:
+    app.kubernetes.io/name: pausable-scylladb-operator
+    app.kubernetes.io/instance: pausable-scylladb-operator
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: pausable-scylladb-operator
+      app.kubernetes.io/instance: pausable-scylladb-operator
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: pausable-scylladb-operator
+        app.kubernetes.io/instance: pausable-scylladb-operator
+    spec:
+      serviceAccountName: pausable-scylladb-operator
+      containers:
+      - name: pausable-scylladb-operator
+        image: docker.io/rzetelskik/pausable-scylladb-operator:latest
+        imagePullPolicy: Always
+        args:
+        - run
+        - --loglevel=4
+        resources:
+          requests:
+            cpu: 10m
+            memory: 20Mi
+      terminationGracePeriodSeconds: 10
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - podAffinityTerm:
+              labelSelector:
+                matchLabels:
+                  app.kubernetes.io/instance: pausable-scylladb-operator
+                  app.kubernetes.io/name: pausable-scylladb-operator
+              topologyKey: kubernetes.io/hostname
+            weight: 1
