@@ -1,0 +1,121 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: scylladb:controller:pausable-scylladb-operator
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - events
+  verbs:
+  - create
+  - patch
+  - update
+- apiGroups:
+  - coordination.k8s.io
+  resources:
+  - leases
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - configmaps
+  - persistentvolumeclaims
+  - secrets
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - scylla.scylladb.com
+  resources:
+  - scylladbdatacenters
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - scylla.scylladb.com
+  resources:
+  - scylladbdatacenters/status
+  verbs:
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - pausing.scylladb.com
+  resources:
+  - scylladbdatacenterpools
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - pausing.scylladb.com
+  resources:
+  - scylladbdatacenterpools/status
+  verbs:
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - pausing.scylladb.com
+  resources:
+  - pausablescylladbdatacenters
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - pausing.scylladb.com
+  resources:
+  - pausablescylladbdatacenters/status
+  verbs:
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - pausing.scylladb.com
+  resources:
+  - scylladbdatacenterclaims
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - pausing.scylladb.com
+  resources:
+  - scylladbdatacenterclaims/status
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch

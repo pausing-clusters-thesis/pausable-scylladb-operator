@@ -1,0 +1,11 @@
+apiVersion: pausing.scylladb.com/v1alpha1
+kind: PausableScyllaDBDatacenter
+metadata:
+  name: basic
+spec:
+  paused: false
+  scyllaDBDatacenterPoolName: basic
+  exposeOptions:
+    cql:
+      ingress:
+        ingressClassName: pausable-scylladb-ingress
