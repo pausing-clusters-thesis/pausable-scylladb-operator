@@ -1,0 +1,17 @@
+FROM quay.io/scylladb/scylla-operator-images:golang-1.24 AS builder
+WORKDIR /go/src/github.com/pausing-clusters-thesis/pausable-scylladb-operator
+COPY . .
+RUN make build --warn-undefined-variables
+
+FROM quay.io/scylladb/scylla-operator-images:base-ubuntu-22.04
+
+LABEL org.opencontainers.image.title="Pausable ScyllaDB Operator" \
+      org.opencontainers.image.authors="Kacper Rzetelski" \
+      org.opencontainers.image.source="https://github.com/pausing-clusters-thesis/pausable-scylladb-operator" \
+      org.opencontainers.image.url="https://hub.docker.com/r/rzetelskik/pausable-scylladb-operator" \
+      org.opencontainers.image.vendor="ScyllaDB"
+
+COPY --from=builder /go/src/github.com/pausing-clusters-thesis/pausable-scylladb-operator/pausable-scylladb-operator /usr/bin/
+COPY --from=builder /go/src/github.com/pausing-clusters-thesis/pausable-scylladb-operator/pausable-scylladb-ingress /usr/bin/
+
+ENTRYPOINT ["/usr/bin/pausable-scylladb-operator"]

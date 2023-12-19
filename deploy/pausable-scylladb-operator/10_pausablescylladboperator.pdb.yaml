@@ -1,0 +1,11 @@
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: pausable-scylladb-operator
+  namespace: pausable-scylladb-operator
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: pausable-scylladb-operator
+      app.kubernetes.io/instance: pausable-scylladb-operator

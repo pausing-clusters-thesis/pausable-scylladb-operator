@@ -1,0 +1,6 @@
+apiVersion: networking.k8s.io/v1
+kind: IngressClass
+metadata:
+  name: pausable-scylladb-ingress
+spec:
+  controller: pausable-scylladb-operator.scylladb.com/ingress-controller
